@@ -1,0 +1,147 @@
+  → Extracting key facts...
+  → Key facts extracted — Parties: User and Acme Corp
+  → Detecting document type...
+  → Document type detected: Terms of Service
+  → Risk taxonomy loaded — 8 categories for Terms of Service
+  → Identifying clause boundaries...
+  → 9 clauses found
+  → Analyzing clause 1 of 9...
+  → Analyzing clause 2 of 9...
+  → ⚠ High risk in clause 2 — running deep dive...
+  → Analyzing clause 3 of 9...
+  → ⚠ High risk in clause 3 — running deep dive...
+  → Analyzing clause 4 of 9...
+  → ⚠ High risk in clause 4 — running deep dive...
+  → Analyzing clause 5 of 9...
+  → ⚠ High risk in clause 5 — running deep dive...
+  → Analyzing clause 6 of 9...
+  → ⚠ High risk in clause 6 — running deep dive...
+  → Analyzing clause 7 of 9...
+  → ⚠ High risk in clause 7 — running deep dive...
+  → Analyzing clause 8 of 9...
+  → ⚠ High risk in clause 8 — running deep dive...
+  → Analyzing clause 9 of 9...
+  → ⚠ High risk in clause 9 — running deep dive...
+  → All clauses analyzed
+  → Running contradiction scan...
+  → ⚠ Contradiction found between clause 3 and clause 4
+  → ⚠ Contradiction found between clause 2 and clause 9
+  → Calculating risk score...
+  → Risk score: 92/100 — Verdict: red
+  → Generating executive summary...
+  → Done!
+
+============================================================
+FINAL RESULT:
+============================================================
+{
+  "document_type": "Terms of Service",
+  "key_facts": {
+    "parties": "User and Acme Corp",
+    "duration": "Monthly, auto-renewing",
+    "jurisdiction": "California, USA"
+  },
+  "risk_score": 92,
+  "verdict": "red",
+  "verdict_reason": "The Terms of Service contain multiple high-risk clauses and contradictions that significantly favor the provider and put the user's rights and data at risk.",
+  "top_concerns": [
+    "Unrestricted data sharing and usage",
+    "Lack of control over account termination and license revocation",
+    "Mandatory arbitration and waiver of legal rights"
+  ],
+  "clauses": [
+    {
+      "id": 1,
+      "original": "This agreement is between you (the User) and Acme Corp, governed by the laws of California, USA.",
+      "plain_english": "This agreement says that any disputes will be settled through arbitration, not in a regular court.",
+      "category": "Arbitration",
+      "risk_level": "Medium",
+      "reason": "You might not be able to take your case to a regular judge or jury."
+    },
+    {
+      "id": 2,
+      "original": "1. LICENSE GRANT. Acme Corp grants you a limited, non-exclusive, revocable license to use the Service. Acme Corp may revoke this license at any time, for any reason, without notice.",
+      "plain_english": "They can shut down your access to the service at any time, without warning.",
+      "category": "Data Ownership",
+      "risk_level": "High",
+      "reason": "They can revoke your license at any time, for any reason.",
+      "deep_dive": "Worst-case implication: Acme Corp can abruptly revoke access to critical data or services, causing business disruption or loss. \nFairer version: \"Acme Corp may revoke this license with 30 days' notice, for material breach or non-payment, allowing for transition.\""
+    },
+    {
+      "id": 3,
+      "original": "2. USER DATA. You grant Acme Corp a perpetual, irrevocable, worldwide license to use, modify, distribute, and create derivative works from any content you upload. Acme Corp may share your data with third-party partners for business purposes.",
+      "plain_english": "You're giving Acme Corp permanent permission to use, modify, and share any content you upload, including photos, videos, and personal info.",
+      "category": "Data Ownership",
+      "risk_level": "High",
+      "reason": "They can use and share your data forever, without your consent or control.",
+      "deep_dive": "Worst-case implication: Acme Corp could sell your uploaded content, such as photos, to third-party advertisers, using them in campaigns without your consent or compensation. \nFairer version: \"Acme Corp may use your uploaded content for internal purposes, with your prior consent for external sharing.\""
+    },
+    {
+      "id": 4,
+      "original": "3. PRIVACY. We value your privacy. Your personal data will not be shared with third parties without your consent.",
+      "plain_english": "They can share your personal data with other companies without asking you first.",
+      "category": "Data Sharing",
+      "risk_level": "High",
+      "reason": "They're not requiring your explicit consent before sharing your data.",
+      "deep_dive": "Worst-case implication: Your data is shared without consent, leading to identity theft or targeted scams. \nFairer version: \"We will only share your personal data with third parties with your explicit, opt-in consent, unless required by law.\""
+    },
+    {
+      "id": 5,
+      "original": "4. AUTO-RENEWAL. Your subscription automatically renews each month. There is no cancellation window. You must contact support 60 days before renewal to cancel.",
+      "plain_english": "You'll keep getting charged every month unless you specifically tell them to stop 60 days in advance.",
+      "category": "Auto-Renewal",
+      "risk_level": "High",
+      "reason": "You'll be charged automatically without a chance to cancel, unless you remember to contact support 60 days before renewal.",
+      "deep_dive": "Worst-case implication: Unwanted, long-term charges if the user forgets to cancel 60 days prior. \nFairer version: \"Auto-renewal with 14-day cancellation window before renewal, and notification 30 days prior.\""
+    },
+    {
+      "id": 6,
+      "original": "5. LIMITATION OF LIABILITY. Acme Corp shall not be liable for any damages whatsoever, including but not limited to direct, indirect, incidental, or consequential damages, arising from your use of the Service.",
+      "plain_english": "You can't hold Acme Corp responsible if something goes wrong with their service.",
+      "category": "Liability Waiver",
+      "risk_level": "High",
+      "reason": "They're releasing themselves from any blame for problems caused by their service.",
+      "deep_dive": "Worst-case implication: If Acme Corp's service causes a data breach, the user may lose sensitive information, but Acme Corp won't be liable for damages. \nFairer version: \"Acme Corp shall not be liable for indirect damages, but remains liable for direct damages caused by gross negligence or willful misconduct.\""
+    },
+    {
+      "id": 7,
+      "original": "6. MODIFICATIONS. Acme Corp reserves the right to modify these terms at any time without prior notice. Continued use constitutes acceptance.",
+      "plain_english": "They can change the rules anytime, and you'll still have to follow them.",
+      "category": "Unilateral Modification",
+      "risk_level": "High",
+      "reason": "You won't get notice before changes are made, and you'll still be bound by the new rules.",
+      "deep_dive": "Worst-case implication: Acme Corp could introduce a clause selling user data without consent, and users would be bound by it without notice. \nFairer version: \"Acme Corp will provide 30-day notice for significant changes, allowing users to opt-out or terminate their account.\""
+    },
+    {
+      "id": 8,
+      "original": "7. ARBITRATION. Any disputes shall be resolved through binding arbitration in San Francisco, CA. You waive your right to a jury trial or class action lawsuit.",
+      "plain_english": "You're giving up your right to take them to court, even if they do something really wrong.",
+      "category": "Arbitration",
+      "risk_level": "High",
+      "reason": "You won't be able to sue them in a regular court, and you'll have to settle disputes through arbitration.",
+      "deep_dive": "Worst-case implication: You're forced into costly, biased arbitration in San Francisco, potentially bankrupting you. \nFairer version: \"Arbitration in your hometown, with option to opt-out for court, and split arbitration costs.\""
+    },
+    {
+      "id": 9,
+      "original": "8. TERMINATION. Acme Corp may terminate your account at any time without cause or notice. Upon termination, all your data will be permanently deleted.",
+      "plain_english": "They can delete your account and all your data without warning or reason.",
+      "category": "Account Termination",
+      "risk_level": "High",
+      "reason": "No notice or reason is given for account termination.",
+      "deep_dive": "Worst-case implication: A business loses critical data, disrupting operations and causing financial loss. \nFairer version: \"Acme Corp may terminate your account with 30-day notice. You can export your data within this period.\""
+    }
+  ],
+  "contradictions": [
+    {
+      "clause_a": 3,
+      "clause_b": 4,
+      "explanation": "Clause 3 allows Acme Corp to share user data with third-party partners, while Clause 4 states that personal data will not be shared with third parties without consent, creating a contradiction."
+    },
+    {
+      "clause_a": 2,
+      "clause_b": 9,
+      "explanation": "Clause 2 grants Acme Corp a perpetual, irrevocable license to use user data, but Clause 9 states that all user data will be permanently deleted upon account termination, undermining the perpetual license."
+    }
+  ],
+  "executive_summary": "Acme Corp's Terms of Service raises concerns about data sharing and account control. The contract has contradictions, such as sharing data despite promising not to. This agreement heavily favors Acme Corp, with a high risk score of 92/100, indicating potential issues for users."
+}
