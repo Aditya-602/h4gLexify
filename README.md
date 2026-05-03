@@ -4,6 +4,8 @@
 
 **Demo Video:** [Watch the Demo](https://drive.google.com/file/d/1HegZr19Wxxu_YKWJ6yXr3rTDuFRTYgUk/view?usp=sharing)
 
+> **Important Note on Prototype:** The Vercel deployment link does not have the backend running. However, a dev mock can be used to check how the interface works. For a complete demonstration of the full project working end-to-end, please refer to the demo video above.
+
 ---
 
 ## 1. Project Overview
