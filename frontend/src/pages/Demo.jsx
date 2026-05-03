@@ -97,9 +97,7 @@ export default function Demo() {
         return;
       }
 
-      const API_BASE_URL =
-        import.meta.env.VITE_API_URL || "http://127.0.0.1:5000";
-      const response = await fetch(`${API_BASE_URL}/api/analyze`, {
+      const response = await fetch("http://127.0.0.1:5000/api/analyze", {
         method: "POST",
         headers,
         body,
@@ -178,6 +176,128 @@ export default function Demo() {
     setHistory([]);
   };
 
+  const handleMockAnalyze = () => {
+    setIsAnalyzing(true);
+    setLogs(["[SYSTEM] Initializing mock agentic analysis pipeline..."]);
+
+    const mockLogs = [
+      "Document received — mock Terms of Service",
+      "Starting initial analysis (extracting facts, detecting type, identifying clauses)...",
+      "Document type detected: Terms of Service",
+      "Risk taxonomy loaded — 8 categories for Terms of Service",
+      "Analyzing clauses concurrently...",
+      "Finished analyzing clause 1",
+      "⚠ High risk in clause 2 — running deep dive...",
+      "Finished analyzing clause 2",
+      "Finished analyzing clause 3",
+      "All clauses analyzed",
+      "Running contradiction scan...",
+      "⚠ Contradiction found between clause 3 and clause 4",
+      "Calculating risk score...",
+      "Risk score: 92/100 — Verdict: red",
+      "Running agentic tasks (Exec Summary, Email Draft, Suggested Questions)...",
+      "Generating amended redline document...",
+      "Done!",
+    ];
+
+    let logIndex = 0;
+    const interval = setInterval(() => {
+      if (logIndex < mockLogs.length) {
+        setLogs((prev) => [...prev, mockLogs[logIndex]]);
+        logIndex++;
+      } else {
+        clearInterval(interval);
+        setLogs((prev) => [
+          ...prev,
+          "[SYSTEM] Analysis complete. Redirecting to dashboard...",
+        ]);
+
+        const MOCK_RESULT = {
+          session_id: "mock123",
+          document_type: "Terms of Service",
+          key_facts: {
+            parties: "User and Acme Corp",
+            duration: "Monthly, auto-renewing",
+            jurisdiction: "California, USA",
+          },
+          risk_score: 92,
+          verdict: "red",
+          verdict_reason:
+            "The Terms of Service contain multiple high-risk clauses and contradictions that significantly favor the provider and put the user's rights and data at risk.",
+          top_concerns: [
+            "Unrestricted data sharing and usage",
+            "Lack of control over account termination and license revocation",
+            "Mandatory arbitration and waiver of legal rights",
+          ],
+          clauses: [
+            {
+              id: 1,
+              original:
+                "This agreement is between you (the User) and Acme Corp, governed by the laws of California, USA.",
+              plain_english:
+                "This agreement says that any disputes will be settled through arbitration, not in a regular court.",
+              category: "Arbitration",
+              risk_level: "Medium",
+              reason:
+                "You might not be able to take your case to a regular judge or jury.",
+            },
+            {
+              id: 2,
+              original:
+                "1. LICENSE GRANT. Acme Corp grants you a limited, non-exclusive, revocable license to use the Service. Acme Corp may revoke this license at any time, for any reason, without notice.",
+              plain_english:
+                "They can shut down your access to the service at any time, without warning.",
+              category: "Data Ownership",
+              risk_level: "High",
+              reason:
+                "They can revoke your license at any time, for any reason.",
+              deep_dive:
+                'Worst-case implication: Acme Corp can abruptly revoke access to critical data or services, causing business disruption or loss. \nFairer version: "Acme Corp may revoke this license with 30 days\' notice, for material breach or non-payment, allowing for transition."',
+            },
+            {
+              id: 3,
+              original:
+                "2. USER DATA. You grant Acme Corp a perpetual, irrevocable, worldwide license to use, modify, distribute, and create derivative works from any content you upload. Acme Corp may share your data with third-party partners for business purposes.",
+              plain_english:
+                "You're giving Acme Corp permanent permission to use, modify, and share any content you upload.",
+              category: "Data Ownership",
+              risk_level: "High",
+              reason:
+                "They can use and share your data forever, without your consent.",
+              deep_dive:
+                'Worst-case implication: Acme Corp could sell your uploaded content to advertisers. \nFairer version: "Acme Corp may use your uploaded content for internal purposes, with your prior consent for external sharing."',
+            },
+          ],
+          contradictions: [
+            {
+              clause_a: 3,
+              clause_b: 4,
+              explanation:
+                "Clause 3 allows Acme Corp to share user data with third-party partners, while Clause 4 states that personal data will not be shared with third parties without consent, creating a contradiction.",
+            },
+          ],
+          executive_summary:
+            "Acme Corp's Terms of Service raises concerns about data sharing and account control. The contract has contradictions, such as sharing data despite promising not to. This agreement heavily favors Acme Corp, with a high risk score of 92/100, indicating potential issues for users.",
+          email_draft:
+            "Hi Team,\n\nI've reviewed the Acme Corp Terms of Service. There are several critical red flags we need to address before signing, specifically around unrestricted data sharing (Clause 3) and immediate account termination without notice (Clause 2).\n\nAdditionally, there's a contradiction between Clause 3 and 4 regarding data privacy that needs clarification.\n\nLet's push back on these points.",
+          suggested_questions: [
+            "What exactly constitutes a 'business purpose' for data sharing in Clause 3?",
+            "Can we negotiate a 30-day cure period for the termination clause?",
+          ],
+        };
+        saveToHistory(MOCK_RESULT);
+
+        setTimeout(() => {
+          setIsAnalyzing(false);
+          // Small timeout to allow React to unmount the terminal overlay before navigating
+          setTimeout(() => {
+            navigate("/results", { state: { result: MOCK_RESULT } });
+          }, 100);
+        }, 800);
+      }
+    }, 150);
+  };
+
   return (
     <div className="relative z-10 w-full min-h-screen px-4 md:px-8 py-32 flex flex-col items-center pointer-events-auto overflow-hidden">
       {/* Loading Overlay - Terminal Style */}
@@ -201,6 +321,7 @@ export default function Demo() {
             <div className="p-6 h-[400px] overflow-y-auto font-mono text-sm flex flex-col scroll-smooth">
               <div className="space-y-3">
                 {logs.map((log, i) => {
+                  if (!log) return null;
                   const isError =
                     log.toLowerCase().includes("error") ||
                     log.toLowerCase().includes("failed");
@@ -452,81 +573,7 @@ export default function Demo() {
 
       {/* Dev Mode Button for UI Testing */}
       <button
-        onClick={() => {
-          const MOCK_RESULT = {
-            document_type: "Terms of Service",
-            key_facts: {
-              parties: "User and Acme Corp",
-              duration: "Monthly, auto-renewing",
-              jurisdiction: "California, USA",
-            },
-            risk_score: 92,
-            verdict: "red",
-            verdict_reason:
-              "The Terms of Service contain multiple high-risk clauses and contradictions that significantly favor the provider and put the user's rights and data at risk.",
-            top_concerns: [
-              "Unrestricted data sharing and usage",
-              "Lack of control over account termination and license revocation",
-              "Mandatory arbitration and waiver of legal rights",
-            ],
-            clauses: [
-              {
-                id: 1,
-                original:
-                  "This agreement is between you (the User) and Acme Corp, governed by the laws of California, USA.",
-                plain_english:
-                  "This agreement says that any disputes will be settled through arbitration, not in a regular court.",
-                category: "Arbitration",
-                risk_level: "Medium",
-                reason:
-                  "You might not be able to take your case to a regular judge or jury.",
-              },
-              {
-                id: 2,
-                original:
-                  "1. LICENSE GRANT. Acme Corp grants you a limited, non-exclusive, revocable license to use the Service. Acme Corp may revoke this license at any time, for any reason, without notice.",
-                plain_english:
-                  "They can shut down your access to the service at any time, without warning.",
-                category: "Data Ownership",
-                risk_level: "High",
-                reason:
-                  "They can revoke your license at any time, for any reason.",
-                deep_dive:
-                  'Worst-case implication: Acme Corp can abruptly revoke access to critical data or services, causing business disruption or loss. \nFairer version: "Acme Corp may revoke this license with 30 days\' notice, for material breach or non-payment, allowing for transition."',
-              },
-              {
-                id: 3,
-                original:
-                  "2. USER DATA. You grant Acme Corp a perpetual, irrevocable, worldwide license to use, modify, distribute, and create derivative works from any content you upload. Acme Corp may share your data with third-party partners for business purposes.",
-                plain_english:
-                  "You're giving Acme Corp permanent permission to use, modify, and share any content you upload.",
-                category: "Data Ownership",
-                risk_level: "High",
-                reason:
-                  "They can use and share your data forever, without your consent.",
-                deep_dive:
-                  'Worst-case implication: Acme Corp could sell your uploaded content to advertisers. \nFairer version: "Acme Corp may use your uploaded content for internal purposes, with your prior consent for external sharing."',
-              },
-            ],
-            contradictions: [
-              {
-                clause_a: 3,
-                clause_b: 4,
-                explanation:
-                  "Clause 3 allows Acme Corp to share user data with third-party partners, while Clause 4 states that personal data will not be shared with third parties without consent, creating a contradiction.",
-              },
-            ],
-            executive_summary:
-              "Acme Corp's Terms of Service raises concerns about data sharing and account control. The contract has contradictions, such as sharing data despite promising not to. This agreement heavily favors Acme Corp, with a high risk score of 92/100, indicating potential issues for users.",
-            email_draft:
-              "Hi Team,\n\nI've reviewed the Acme Corp Terms of Service. There are several critical red flags we need to address before signing, specifically around unrestricted data sharing (Clause 3) and immediate account termination without notice (Clause 2).\n\nAdditionally, there's a contradiction between Clause 3 and 4 regarding data privacy that needs clarification.\n\nLet's push back on these points.",
-            suggested_questions: [
-              "What exactly constitutes a 'business purpose' for data sharing in Clause 3?",
-              "Can we negotiate a 30-day cure period for the termination clause?",
-            ],
-          };
-          navigate("/results", { state: { result: MOCK_RESULT } });
-        }}
+        onClick={handleMockAnalyze}
         className="mt-12 px-6 py-2 bg-neutral-900 text-white text-xs font-bold rounded-full opacity-50 hover:opacity-100 transition-opacity"
       >
         🎨 UI Dev Mode: View Mockup Results

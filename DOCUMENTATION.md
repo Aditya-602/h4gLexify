@@ -2,6 +2,8 @@
 
 ### Project Documentation
 
+**Demo Video:** [Watch the Demo](https://drive.google.com/file/d/1HegZr19Wxxu_YKWJ6yXr3rTDuFRTYgUk/view?usp=sharing)
+
 ---
 
 ## 1. Project Overview
@@ -19,23 +21,23 @@ The project is structured as a full-stack application:
 
 ### Frontend Stack
 
-| Component | Technology |
-| --- | --- |
-| Framework | React.js built with Vite |
-| Styling | Tailwind CSS |
-| Animations | Framer Motion |
-| Icons | `@tabler/icons-react` & `lucide-react` |
-| Routing | React Router (`react-router-dom`) |
+| Component  | Technology                             |
+| ---------- | -------------------------------------- |
+| Framework  | React.js built with Vite               |
+| Styling    | Tailwind CSS                           |
+| Animations | Framer Motion                          |
+| Icons      | `@tabler/icons-react` & `lucide-react` |
+| Routing    | React Router (`react-router-dom`)      |
 
 ### Backend Stack
 
-| Component | Technology |
-| --- | --- |
-| Framework | Flask (Python) with `flask_cors` |
-| LLM Engine | Groq API — `meta-llama/llama-4-scout-17b-16e-instruct` via `groq` python client |
-| Concurrency | `concurrent.futures.ThreadPoolExecutor` |
-| PDF Processing | PyMuPDF (`fitz`) |
-| URL Scraping | BeautifulSoup4 |
+| Component      | Technology                                                                      |
+| -------------- | ------------------------------------------------------------------------------- |
+| Framework      | Flask (Python) with `flask_cors`                                                |
+| LLM Engine     | Groq API — `meta-llama/llama-4-scout-17b-16e-instruct` via `groq` python client |
+| Concurrency    | `concurrent.futures.ThreadPoolExecutor`                                         |
+| PDF Processing | PyMuPDF (`fitz`)                                                                |
+| URL Scraping   | BeautifulSoup4                                                                  |
 
 ---
 
@@ -80,11 +82,11 @@ The backend located in `backend/` orchestrates the AI logic.
 
 ### Endpoints — `app.py`
 
-| Endpoint | Description |
-| --- | --- |
-| `GET /api/health` | Health check |
-| `GET /api/test-groq` | Validates the connection to the Groq API |
-| `POST /api/analyze` | Core endpoint. Generates a UUID `session_id`, uses a background `threading.Thread` and a `queue.Queue` to stream SSE back to the frontend |
+| Endpoint             | Description                                                                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET /api/health`    | Health check                                                                                                                              |
+| `GET /api/test-groq` | Validates the connection to the Groq API                                                                                                  |
+| `POST /api/analyze`  | Core endpoint. Generates a UUID `session_id`, uses a background `threading.Thread` and a `queue.Queue` to stream SSE back to the frontend |
 
 ### Text Extraction — `extractor.py`
 
@@ -96,7 +98,7 @@ Normalizes all inputs into a clean document block.
 
 ### Taxonomy — `taxonomy.py`
 
-Defines the core risks based on document types (e.g., NDA risks vs. Rental Agreement risks). For example, an NDA targets fields like *Confidentiality Scope*, *Non-Compete*, and *Duration*.
+Defines the core risks based on document types (e.g., NDA risks vs. Rental Agreement risks). For example, an NDA targets fields like _Confidentiality Scope_, _Non-Compete_, and _Duration_.
 
 ### The Agentic Pipeline — `pipeline.py`
 
@@ -118,7 +120,7 @@ The pipeline runs 3 tasks simultaneously:
 
 - Loads the risk category via `taxonomy.py`.
 - Iterates over every identified clause using a worker pool (up to 4 workers).
-- For each clause, it determines: *Plain English Translation*, *Category*, *Risk Level*, and *Reasoning*.
+- For each clause, it determines: _Plain English Translation_, _Category_, _Risk Level_, and _Reasoning_.
 - **Deep Dive Trigger** — If a clause scores "High Risk", the system automatically triggers a secondary prompt (`DEEP_DIVE_PROMPT`) to generate a "Fairer version" of the clause.
 
 **Step 3 — Sequential Final Analysis**
@@ -241,5 +243,4 @@ flowchart TD
     style RESULTS fill:#1E3A5F,stroke:#1E3A5F,color:#FFFFFF
 ```
 
-> **Reading the diagram** — Boxes grouped inside the dashed *Agentic Pipeline* boundary represent stages executed by `pipeline.py`. Stages marked **⟨Concurrent⟩** run their child tasks simultaneously via `ThreadPoolExecutor`. The **SSE stream** carries real-time progress events back to the terminal log in `Demo.jsx` throughout pipeline execution, with the final `event: result` payload triggering the redirect to `Results.jsx`.
->
+> **Reading the diagram** — Boxes grouped inside the dashed _Agentic Pipeline_ boundary represent stages executed by `pipeline.py`. Stages marked **⟨Concurrent⟩** run their child tasks simultaneously via `ThreadPoolExecutor`. The **SSE stream** carries real-time progress events back to the terminal log in `Demo.jsx` throughout pipeline execution, with the final `event: result` payload triggering the redirect to `Results.jsx`.
